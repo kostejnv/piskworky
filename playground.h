@@ -23,7 +23,7 @@ public:
     //unique_ptr<player> players[2];
     int min_x = 0, min_y = 0, max_x = 0, max_y = 0; //coordinates of extremal cells
     void check_extremal_for_last_point(const point &last_p);
-
+    void add_to_field(char sign, const point & coordinate);
     char get_sign(const point &p);
 
 

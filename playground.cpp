@@ -20,3 +20,6 @@ char playground::get_sign(const point &p) {
     return field1[p.x][p.y];
 }
 
+void playground::add_to_field(char sign, const point &coordinate) {
+    field1[coordinate.x][coordinate.y] = sign;
+}

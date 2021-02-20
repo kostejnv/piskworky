@@ -15,6 +15,7 @@ using coordinate_size = point;
 
 class playground;
 class console_comunicator {
+public:
     static const int WINDOWS_X_SIZE = 100;
     static const int WINDOWS_Y_SIZE = 100;
     static const int FIRST_LINE_GRID = 5;
@@ -22,7 +23,7 @@ class console_comunicator {
     static const int CELL_LENGTH = 4;
     static const char PLAYER1_SIGN = 'X';
     static const char PLAYER2_SIGN = 'O';
-
+private:
     WINDOW * win;
 
 
