@@ -15,11 +15,12 @@ using namespace std;
 using cell = char;
 using field = map<int, map<int, cell>>; //first x then y
 
+class console_comunicator;
 class playground {
-    console_comunicator c;
+    console_comunicator * c;
     field field1;
 public:
-    unique_ptr<player> players[2];
+    //unique_ptr<player> players[2];
     int min_x = 0, min_y = 0, max_x = 0, max_y = 0; //coordinates of extremal cells
     void check_extremal_for_last_point(const point &last_p);
 

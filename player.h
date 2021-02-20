@@ -7,11 +7,13 @@
 
 #include "point.h"
 #include "playground.h"
+#include "string"
 
 class playground;
 
 class player {
     virtual point play(const playground &playg) = 0;
+    virtual std::string get_type() = 0;
     virtual ~player() {}
 };
 
