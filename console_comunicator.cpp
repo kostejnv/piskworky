@@ -39,9 +39,11 @@ void console_comunicator::print_title() {
 
 void console_comunicator::print_player_turn(size_t turn) {
     if (turn == 1)
-        print_centrelized("                  player 1 (X): It is your turn!           player 2 (O)                  ", 3);
+        print_centrelized("                  player 1 (X): It is your turn!           player 2 (O)                  ",
+                          3);
     else
-        print_centrelized("                  player 1 (X):                            player 2 (O): It is your turn!", 3);
+        print_centrelized("                  player 1 (X):                            player 2 (O): It is your turn!",
+                          3);
 }
 
 void console_comunicator::print_header(size_t turn) {
@@ -50,7 +52,7 @@ void console_comunicator::print_header(size_t turn) {
 }
 
 string console_comunicator::get_string_line(size_t number_of_cell) {
-    return string(number_of_cell*CELL_LENGTH+1, '-');
+    return string(number_of_cell * CELL_LENGTH + 1, '-');
 }
 
 string console_comunicator::get_cells_interior(size_t number_of_cell) {
@@ -64,8 +66,8 @@ string console_comunicator::get_cells_interior(size_t number_of_cell) {
 
 coordinate_size console_comunicator::get_grid_size(const playground &p) {
     int x_size, y_size;
-    x_size = 2* CORIDOR_EDGE_LENGTH + p.max_x - p.min_x +1;
-    y_size = 2* CORIDOR_EDGE_LENGTH + p.max_y - p.min_y +1;
+    x_size = 2 * CORIDOR_EDGE_LENGTH + p.max_x - p.min_x + 1;
+    y_size = 2 * CORIDOR_EDGE_LENGTH + p.max_y - p.min_y + 1;
     return coordinate_size(x_size, y_size);
 }
 
@@ -74,10 +76,10 @@ void console_comunicator::print_grid(const playground &p) {
     string line = get_string_line(size.y);
     string interior = get_cells_interior(size.y);
     for (int i = 0; i < size.x; ++i) {
-        print_centrelized(line, FIRST_LINE_GRID + 2*i);
-        print_centrelized(interior, FIRST_LINE_GRID + 2*i + 1);
+        print_centrelized(line, FIRST_LINE_GRID + 2 * i);
+        print_centrelized(interior, FIRST_LINE_GRID + 2 * i + 1);
     }
-    print_centrelized(line, FIRST_LINE_GRID + 2*size.x);
+    print_centrelized(line, FIRST_LINE_GRID + 2 * size.x);
 }
 
 int console_comunicator::get_fist_pos_of_centrilized_text(const string &text) {
@@ -91,7 +93,7 @@ int console_comunicator::get_answer_from_centrilized_text(const string &text, si
     bool pressed_enter = false;
     wmove(win, line, first_x_choice);
     wrefresh(win);
-    while (true){
+    while (true) {
 
         char c = wgetch(win);
         switch (c) {
@@ -111,7 +113,7 @@ int console_comunicator::get_answer_from_centrilized_text(const string &text, si
                 break;
         }
         wrefresh(win);
-        if(pressed_enter)
+        if (pressed_enter)
             break;
     }
 
@@ -123,9 +125,22 @@ void console_comunicator::print_starting_screen(playground &p) {
     print_right("Player number 1 is: ", 2);
     string text = "*HUMAN          *COMPUTER";
     print_centrelized(text, 3);
-    int answer = get_answer_from_centrilized_text(text,3);
+    int answer = get_answer_from_centrilized_text(text, 3);
     //TODO:ziskat player
     print_right("Player number 2 is: ", 5);
     print_centrelized(text, 6);
-    answer = get_answer_from_centrilized_text(text,6);
+    answer = get_answer_from_centrilized_text(text, 6);
+}
+
+point console_comunicator::convert_to_grid_coordinate(const point &p, const playground &playground, point grid_pos) {
+    int x_grid = grid_pos.x + 2 + CELL_LENGTH * (p.x - playground.min_x + CORIDOR_EDGE_LENGTH);
+    int y_grid = grid_pos.y + 1 + 2 * (p.y - playground.min_y + CORIDOR_EDGE_LENGTH);
+    return point(x_grid, y_grid);
+
+}
+
+point console_comunicator::convert_to_real_coordinate(const point &p, const playground &playground, point grid_pos) {
+    int x_real = playground.min_x - CORIDOR_EDGE_LENGTH + (p.x - grid_pos.x - 2) / CELL_LENGTH;
+    int y_real = playground.min_y - CORIDOR_EDGE_LENGTH + (p.y - grid_pos.y - 1) / 2;
+    return point(x_real, y_real);
 }

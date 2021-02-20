@@ -43,6 +43,8 @@ public:
     void print_grid(const playground &p);
     int get_fist_pos_of_centrilized_text(const string & text);
     int get_answer_from_centrilized_text(const string & text, size_t line);
+    point convert_to_real_coordinate(const point &p, const playground &playground, point grid_pos);
+    point convert_to_grid_coordinate(const point &p, const playground &playground, point grid_pos);
 private:
 
 };
