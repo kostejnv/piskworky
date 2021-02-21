@@ -8,14 +8,12 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     console_comunicator c;
-    //c.print_title();
-    //c.print_right("Player number 1 is: ", 2);
     playground p;
+    bool boo;
+    p.add_to_field('x',point(2,2),boo);
     c.print_starting_screen(p);
-    //string text = "*HUMAN          *COMPUTER";
-    //c.print_centrelized(text, 3);
-    c.print_header(1);
-    c.print_grid(p);
+    c.print_playing_screen(p);
+    c.get_coordinate_from_user(p);
     while(true);
     /*
     playground p;
@@ -30,7 +28,7 @@ int main(int argc, char *argv[]) {
     /*
     playground p;
     cout<< p.min_x;
-    p.check_extremal_for_last_point(point(-2,2));
+    p.try_to_encrese_field(point(-2,2));
     cout<< p.min_x;
     /*
     field f;

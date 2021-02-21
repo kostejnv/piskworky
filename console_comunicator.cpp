@@ -5,6 +5,7 @@
 #include "console_comunicator.h"
 #include "ncurses.h"
 #include "sstream"
+#include "iostream"
 
 console_comunicator::console_comunicator() {
     initscr();
@@ -73,13 +74,15 @@ coordinate_size console_comunicator::get_grid_size(const playground &p) {
 
 void console_comunicator::print_grid(const playground &p) {
     coordinate_size size = get_grid_size(p);
-    string line = get_string_line(size.y);
-    string interior = get_cells_interior(size.y);
-    for (int i = 0; i < size.x; ++i) {
+    string line = get_string_line(size.x);
+    string interior = get_cells_interior(size.x);
+    for (int i = 0; i < size.y; ++i) {
         print_centrelized(line, FIRST_LINE_GRID + 2 * i);
         print_centrelized(interior, FIRST_LINE_GRID + 2 * i + 1);
     }
-    print_centrelized(line, FIRST_LINE_GRID + 2 * size.x);
+    print_centrelized(line, FIRST_LINE_GRID + 2 * size.y);
+    GRID_POS = point(get_fist_pos_of_centrilized_text(line), FIRST_LINE_GRID);
+    FIRST_LINE_FOOTER = GRID_POS.y + size.y + 1;
 }
 
 int console_comunicator::get_fist_pos_of_centrilized_text(const string &text) {
@@ -132,15 +135,88 @@ void console_comunicator::print_starting_screen(playground &p) {
     answer = get_answer_from_centrilized_text(text, 6);
 }
 
-point console_comunicator::convert_to_grid_coordinate(const point &p, const playground &playground, point grid_pos) {
-    int x_grid = grid_pos.x + 2 + CELL_LENGTH * (p.x - playground.min_x + CORIDOR_EDGE_LENGTH);
-    int y_grid = grid_pos.y + 1 + 2 * (p.y - playground.min_y + CORIDOR_EDGE_LENGTH);
+point console_comunicator::convert_to_grid_coordinate(const point &p, const playground &playground) {
+    int x_grid = GRID_POS.x + 2 + CELL_LENGTH * (p.x - playground.min_x + CORIDOR_EDGE_LENGTH);
+    int y_grid = GRID_POS.y + 1 + 2 * (p.y - playground.min_y + CORIDOR_EDGE_LENGTH);
     return point(x_grid, y_grid);
 
 }
 
-point console_comunicator::convert_to_real_coordinate(const point &p, const playground &playground, point grid_pos) {
-    int x_real = playground.min_x - CORIDOR_EDGE_LENGTH + (p.x - grid_pos.x - 2) / CELL_LENGTH;
-    int y_real = playground.min_y - CORIDOR_EDGE_LENGTH + (p.y - grid_pos.y - 1) / 2;
+point console_comunicator::convert_to_real_coordinate(const point &p, const playground &playground) {
+    int x_real = playground.min_x - CORIDOR_EDGE_LENGTH + (p.x - GRID_POS.x - 2) / CELL_LENGTH;
+    int y_real = playground.min_y - CORIDOR_EDGE_LENGTH + (p.y - GRID_POS.y - 1) / 2;
     return point(x_real, y_real);
+}
+
+void console_comunicator::fill_grid(const playground &playground) {
+    for (const auto&[x, line] : playground.field1) {
+        for (const auto&[y, sign] : line) {
+            point grid_point = convert_to_grid_coordinate(point(x, y), playground);
+            wmove(win, grid_point.y, grid_point.x);
+            waddch(win, sign);
+        }
+    }
+    wrefresh(win);
+}
+
+void console_comunicator::print_field(const playground &playground) {
+    print_grid(playground);
+    fill_grid(playground);
+}
+
+void console_comunicator::print_playing_screen(const playground &playground) {
+    print_header(1);
+    print_field(playground);
+}
+
+point console_comunicator::get_coordinate_from_user(const playground &playground) {
+
+    point actual_pos = convert_to_grid_coordinate(point(0, 0), playground);
+    bool cell_was_selected = false;
+
+    while (true) {
+
+        char c = wgetch(win);
+
+        switch (c) {
+            // normal character handling
+            case 10:
+                cell_was_selected = true;
+                break;
+            case 'w':
+                if (convert_to_real_coordinate(point(actual_pos.x, actual_pos.y - 2), playground).y >=
+                    playground.min_y - CORIDOR_EDGE_LENGTH) {
+                    actual_pos.y -= 2;
+                    wmove(win, actual_pos.y, actual_pos.x);
+                }
+                break;
+            case 's':
+                if (convert_to_real_coordinate(point(actual_pos.x, actual_pos.y + 2), playground).y <=
+                    playground.max_y + CORIDOR_EDGE_LENGTH) {
+                    actual_pos.y += 2;
+                    wmove(win, actual_pos.y, actual_pos.x);
+                }
+                break;
+            case 'd':
+                if (convert_to_real_coordinate(point(actual_pos.x + CELL_LENGTH, actual_pos.y), playground).x <=
+                    playground.max_x + CORIDOR_EDGE_LENGTH) {
+                    actual_pos.x += CELL_LENGTH;
+                    wmove(win, actual_pos.y, actual_pos.x);
+                }
+                break;
+            case 'a':
+                if (convert_to_real_coordinate(point(actual_pos.x - CELL_LENGTH, actual_pos.y), playground).x >=
+                    playground.min_x - CORIDOR_EDGE_LENGTH) {
+                    actual_pos.x -= CELL_LENGTH;
+                    wmove(win, actual_pos.y, actual_pos.x);
+                }
+                break;
+            default:
+                break;
+
+        }
+        wrefresh(win);
+        if (cell_was_selected)
+            return actual_pos;
+    }
 }
