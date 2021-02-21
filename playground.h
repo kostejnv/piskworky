@@ -17,8 +17,8 @@ using field = map<int, map<int, cell>>; //first x then y
 
 class console_comunicator;
 class playground {
-    console_comunicator * c;
 public:
+    console_comunicator * c;
     field field1;
     //unique_ptr<player> players[2];
     int min_x = 0, min_y = 0, max_x = 0, max_y = 0; //coordinates of extremal cells
