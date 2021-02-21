@@ -6,6 +6,8 @@
 #include "ncurses.h"
 #include "sstream"
 #include "iostream"
+#include "human_player.h"
+#include "memory"
 
 console_comunicator::console_comunicator() {
     initscr();
@@ -129,10 +131,20 @@ void console_comunicator::print_starting_screen(playground &p) {
     string text = "*HUMAN          *COMPUTER";
     print_centrelized(text, 3);
     int answer = get_answer_from_centrilized_text(text, 3);
-    //TODO:ziskat player
+    if (answer == 0)
+        p.players[0] = make_unique<human_player>();
+    else
+     exit(-1);
+    //TODO: add computer player
+
     print_right("Player number 2 is: ", 5);
     print_centrelized(text, 6);
     answer = get_answer_from_centrilized_text(text, 6);
+    if (answer == 0)
+        p.players[1] = make_unique<human_player>();
+    else
+        exit(-1);
+    //TODO: add computer player
 }
 
 point console_comunicator::convert_to_grid_coordinate(const point &p, const playground &playground) {

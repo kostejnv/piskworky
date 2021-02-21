@@ -8,9 +8,12 @@
 #include "player.h"
 #include "console_comunicator.h"
 #include "point.h"
+#include "playground.h"
 
-class human_player :  player {
+
+class human_player :   public player {
 public:
+    human_player() {}
     virtual point play(const playground &playg) override;
     virtual std::string get_type() override;
     virtual ~human_player() {}
