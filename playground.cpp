@@ -70,3 +70,11 @@ bool playground::is_solved(const point &last_move) {
         return true;
     return false;
 }
+
+void playground::clear_field() {
+    field1.clear();
+    min_x = -INITIAL_SIZE;
+    min_y = -INITIAL_SIZE;
+    max_x = INITIAL_SIZE;
+    max_y - INITIAL_SIZE;
+}

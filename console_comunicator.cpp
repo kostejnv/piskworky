@@ -16,7 +16,11 @@ console_comunicator::console_comunicator() {
 }
 
 console_comunicator::~console_comunicator() {
+    echo();
+    noraw();
+    endwin();
 }
+
 
 void console_comunicator::print_centrelized(const string &text, size_t line) {
     wmove(win, line, 0);
@@ -79,14 +83,13 @@ void console_comunicator::print_grid(const playground &p) {
     string line = get_string_line(size.x);
     string interior = get_cells_interior(size.x);
     wmove(win, FIRST_LINE_GRID, 0);
-    wclrtobot(win);
     for (int i = 0; i < size.y; ++i) {
         print_centrelized(line, FIRST_LINE_GRID + 2 * i);
         print_centrelized(interior, FIRST_LINE_GRID + 2 * i + 1);
     }
     print_centrelized(line, FIRST_LINE_GRID + 2 * size.y);
     GRID_POS = point(get_fist_pos_of_centrilized_text(line), FIRST_LINE_GRID);
-    FIRST_LINE_FOOTER = GRID_POS.y + size.y + 1;
+    FIRST_LINE_FOOTER = GRID_POS.y + 2 * size.y + 2;
 }
 
 int console_comunicator::get_fist_pos_of_centrilized_text(const string &text) {
@@ -179,6 +182,7 @@ void console_comunicator::print_field(const playground &playground) {
 }
 
 void console_comunicator::print_playing_screen(const playground &playground) {
+    wclear(win);
     print_header(1);
     print_field(playground);
 }
