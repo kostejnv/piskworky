@@ -26,6 +26,8 @@ public:
     bool try_to_encrese_field(const point &last_p);
     void add_to_field(char sign, const point & coordinate);
     char get_sign(const point &p);
+    bool five_in_direction(point direction, const point &last_move);
+    bool is_solved(const point &last_move);
 
 
 private:

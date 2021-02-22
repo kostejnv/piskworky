@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
         point played_move = p.players[index % 2]->play(p);
         p.add_to_field(p.players[index % 2]->sign, played_move);
         if (p.try_to_encrese_field(played_move)) {
-            stringstream sss;
+            /*stringstream sss;
             sss << p.min_y << "  " << p.max_y << "  " << p.min_x << "  " << p.max_x << "  ";
             for (const auto&[x, line] : p.field1) {
                 for (const auto&[y, sign] : line) {
@@ -31,12 +31,15 @@ int main(int argc, char *argv[]) {
                 }
             }
             wmove(c.win, 0,0);
-            waddstr(c.win,sss.str().c_str());
+            waddstr(c.win,sss.str().c_str());*/
             c.print_field(p);
         }
         else
             c.add_move(played_move, p.players[index % 2]->sign, p);
-        if (false) //TODO: solved function
+        if (p.is_solved(played_move)){
+            wmove(c.win, 0,0);
+            waddstr(c.win, "WIN!");
+        }
             ; //TODO: print winning screen
         index++;
 
