@@ -9,12 +9,15 @@
 #include <string>
 #include "playground.h"
 #include "point.h"
+#include "memory"
+#include "player.h"
 
 using namespace std;
 
 using coordinate_size = point;
 
 class playground;
+class player;
 
 class console_comunicator {
 public:
@@ -73,6 +76,8 @@ public:
     point get_coordinate_from_user(const playground &playground);
 
     void add_move(point move, char sign, const playground &p);
+
+    bool print_winning_footer(int winner_id);
 
 private:
 

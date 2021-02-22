@@ -136,7 +136,7 @@ void console_comunicator::print_starting_screen(playground &p) {
     if (answer == 0)
         p.players[0] = make_unique<human_player>('X', this);
     else
-     exit(-1);
+        exit(-1);
     //TODO: add computer player
 
     print_right("Player number 2 is: ", 5);
@@ -239,4 +239,13 @@ void console_comunicator::add_move(point move, char sign, const playground &p) {
     point grid_point = convert_to_grid_coordinate(move, p);
     wmove(win, grid_point.y, grid_point.x);
     waddch(win, sign);
+}
+
+bool console_comunicator::print_winning_footer(int winner_id) { //true if player want next game
+    stringstream sss;
+    sss << "Winner is player number " << winner_id << ". CONGRATULATIONS!";
+    print_centrelized(sss.str(), FIRST_LINE_FOOTER);
+    print_right("Do you play revenge?", FIRST_LINE_FOOTER + 1);
+    print_centrelized("*YES            *NO", FIRST_LINE_FOOTER + 2);
+    return get_answer_from_centrilized_text("*YES            *NO", FIRST_LINE_FOOTER + 2) == 0;
 }

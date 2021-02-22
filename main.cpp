@@ -36,11 +36,8 @@ int main(int argc, char *argv[]) {
         }
         else
             c.add_move(played_move, p.players[index % 2]->sign, p);
-        if (p.is_solved(played_move)){
-            wmove(c.win, 0,0);
-            waddstr(c.win, "WIN!");
-        }
-            ; //TODO: print winning screen
+        if (p.is_solved(played_move))
+            bool next_game = c.print_winning_footer(index % 2 + 1);
         index++;
 
     }
