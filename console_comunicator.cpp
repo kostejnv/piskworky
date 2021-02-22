@@ -134,7 +134,7 @@ void console_comunicator::print_starting_screen(playground &p) {
     print_centrelized(text, 3);
     int answer = get_answer_from_centrilized_text(text, 3);
     if (answer == 0)
-        p.players[0] = make_unique<human_player>();
+        p.players[0] = make_unique<human_player>('X', this);
     else
      exit(-1);
     //TODO: add computer player
@@ -143,7 +143,7 @@ void console_comunicator::print_starting_screen(playground &p) {
     print_centrelized(text, 6);
     answer = get_answer_from_centrilized_text(text, 6);
     if (answer == 0)
-        p.players[1] = make_unique<human_player>();
+        p.players[1] = make_unique<human_player>('O', this);
     else
         exit(-1);
     //TODO: add computer player

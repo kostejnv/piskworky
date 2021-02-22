@@ -9,5 +9,5 @@ std::string human_player::get_type() {
 }
 
 point human_player::play(const playground &playg) {
-    return playg.c->get_coordinate_from_user(playg);
+    return c->get_coordinate_from_user(playg);
 }

@@ -13,6 +13,7 @@ class playground;
 
 class player {
 public:
+    char sign = 0;
     virtual point play(const playground &playg) = 0;
     virtual std::string get_type() = 0;
     virtual ~player() {}

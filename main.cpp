@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     console_comunicator c;
-    playground p(&c);
+    playground p;
 
 /*    c.print_field(p);
     p.add_to_field('x',point(0,0));
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     int index = 0;
     while (true) {
         point played_move = p.players[index % 2]->play(p);
-        p.add_to_field('X', played_move);
+        p.add_to_field(p.players[index % 2]->sign, played_move);
         if (p.try_to_encrese_field(played_move)) {
             stringstream sss;
             sss << p.min_y << "  " << p.max_y << "  " << p.min_x << "  " << p.max_x << "  ";
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
             c.print_field(p);
         }
         else
-            c.add_move(played_move, 'X', p);
+            c.add_move(played_move, p.players[index % 2]->sign, p);
         if (false) //TODO: solved function
             ; //TODO: print winning screen
         index++;
