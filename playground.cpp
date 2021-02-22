@@ -4,9 +4,13 @@
 
 #include "playground.h"
 
+playground::playground(console_comunicator *c) {
+    this->c = c;
+}
 
 bool playground::try_to_encrese_field(const point &last_p) {
     bool was_encrease = false;
+
     if (max_x < last_p.x) {
         max_x = last_p.x;
         was_encrease = true;
@@ -36,7 +40,6 @@ char playground::get_sign(const point &p) {
     return 0;
 }
 
-void playground::add_to_field(char sign, const point &coordinate, bool &was_encreased) {
+void playground::add_to_field(char sign, const point &coordinate) {
     field1[coordinate.x][coordinate.y] = sign;
-    was_encreased = try_to_encrese_field(coordinate);
 }

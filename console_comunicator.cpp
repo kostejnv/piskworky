@@ -78,6 +78,8 @@ void console_comunicator::print_grid(const playground &p) {
     coordinate_size size = get_grid_size(p);
     string line = get_string_line(size.x);
     string interior = get_cells_interior(size.x);
+    wmove(win, FIRST_LINE_GRID, 0);
+    wclrtobot(win);
     for (int i = 0; i < size.y; ++i) {
         print_centrelized(line, FIRST_LINE_GRID + 2 * i);
         print_centrelized(interior, FIRST_LINE_GRID + 2 * i + 1);
@@ -229,6 +231,12 @@ point console_comunicator::get_coordinate_from_user(const playground &playground
         }
         wrefresh(win);
         if (cell_was_selected)
-            return actual_pos;
+            return convert_to_real_coordinate(actual_pos, playground);
     }
+}
+
+void console_comunicator::add_move(point move, char sign, const playground &p) {
+    point grid_point = convert_to_grid_coordinate(move, p);
+    wmove(win, grid_point.y, grid_point.x);
+    waddch(win, sign);
 }

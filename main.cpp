@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ncurses.h>
+#include <sstream>
 #include "playground.h"
 #include "point.h"
 #include "console_comunicator.h"
@@ -8,88 +9,38 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     console_comunicator c;
-    playground p;
-    bool boo;
-    p.add_to_field('x',point(2,2),boo);
+    playground p(&c);
+
+/*    c.print_field(p);
+    p.add_to_field('x',point(0,0));
+    p.try_to_encrese_field(point(0,0));
+    c.print_field(p);
+    while(true);*/
     c.print_starting_screen(p);
     c.print_playing_screen(p);
-    c.get_coordinate_from_user(p);
-    while(true);
-    /*
-    playground p;
-    p.min_x = 0;
-    p.max_x = 3;
-    p.min_y= 0;
-    p.max_y = 3;
-    console_comunicator a;
-    a.print_header(1);
-    a.print_grid(p);
-    while(true);
-    /*
-    playground p;
-    cout<< p.min_x;
-    p.try_to_encrese_field(point(-2,2));
-    cout<< p.min_x;
-    /*
-    field f;
-    //f[0];
-    //f[0][1] = 'a';
-    int i = f[0][1];
-    cout << i;
-    /*
-
-    initscr();
-    WINDOW * win;
-    win = newwin(100, 100, 0, 0);
-    noecho();
-
-    int x = 0;
-    int y = 0;
+    int index = 0;
     while (true) {
-
-        char c = getch();
-
-        switch (c) {
-            // normal character handling
-            case 10:
-                waddch(win, 'X');
-                wmove(win, y, x);
-                break;
-            case 'q':
-                char *sss;
-                wmove(win, 0,0);
-                waddstr(win, "   ahoj");
-                wmove(win, 0,0);
-                winstr(win,sss);
-                wmove(win, 5,5);
-                waddstr(win, sss);
-                break;
-            case 'x':
-                clear();
-                break;
-            case 'w':
-                y -= 2;
-                wmove(win, y, x);
-                break;
-            case 's':
-                y += 2;
-                wmove(win, y, x);
-                break;
-            case 'd':
-                x += 2;
-                wmove(win, y, x);
-                break;
-            case 'a':
-                x -= 2;
-                wmove(win, y, x);
-                break;
-            default:
-                break;
-
+        point played_move = p.players[index % 2]->play(p);
+        p.add_to_field('X', played_move);
+        if (p.try_to_encrese_field(played_move)) {
+            stringstream sss;
+            sss << p.min_y << "  " << p.max_y << "  " << p.min_x << "  " << p.max_x << "  ";
+            for (const auto&[x, line] : p.field1) {
+                for (const auto&[y, sign] : line) {
+                    sss << y << "  " << x << "  ";
+                }
+            }
+            wmove(c.win, 0,0);
+            waddstr(c.win,sss.str().c_str());
+            c.print_field(p);
         }
-        wrefresh(win);
+        else
+            c.add_move(played_move, 'X', p);
+        if (false) //TODO: solved function
+            ; //TODO: print winning screen
+        index++;
+
     }
-     /**/
 
 
     return 0;

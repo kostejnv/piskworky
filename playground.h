@@ -23,9 +23,10 @@ public:
     console_comunicator * c;
     field field1;
     unique_ptr<player> players[2];
+    playground(console_comunicator *c);
     int min_x = 0, min_y = 0, max_x = 0, max_y = 0; //coordinates of extremal cells
     bool try_to_encrese_field(const point &last_p);
-    void add_to_field(char sign, const point & coordinate, bool & was_encrease);
+    void add_to_field(char sign, const point & coordinate);
     char get_sign(const point &p);
 
 

@@ -18,8 +18,8 @@ class playground;
 
 class console_comunicator {
 public:
-    static const int WINDOWS_X_SIZE = 100;
-    static const int WINDOWS_Y_SIZE = 100;
+    static const int WINDOWS_X_SIZE = 200;
+    static const int WINDOWS_Y_SIZE = 200;
     static const int FIRST_LINE_GRID = 5;
     static const int CORIDOR_EDGE_LENGTH = 3;
     static const int CELL_LENGTH = 4;
@@ -28,10 +28,10 @@ public:
     point GRID_POS = point(0, 0);
     int FIRST_LINE_FOOTER = 5;
 private:
-    WINDOW *win;
-
-
 public:
+
+
+    WINDOW *win;
     console_comunicator();
 
     ~console_comunicator();
@@ -71,6 +71,8 @@ public:
     void print_playing_screen(const playground &playground);
 
     point get_coordinate_from_user(const playground &playground);
+
+    void add_move(point move, char sign, const playground &p);
 
 private:
 
