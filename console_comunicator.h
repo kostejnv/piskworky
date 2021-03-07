@@ -21,15 +21,17 @@ class player;
 
 class console_comunicator {
 public:
-    static const int WINDOWS_X_SIZE = 200;
-    static const int WINDOWS_Y_SIZE = 200;
-    static const int FIRST_LINE_GRID = 5;
-    static const int CORIDOR_EDGE_LENGTH = 3;
-    static const int CELL_LENGTH = 4;
-    static const char PLAYER1_SIGN = 'X';
-    static const char PLAYER2_SIGN = 'O';
-    point GRID_POS = point(0, 0);
-    int FIRST_LINE_FOOTER = 5;
+    static const int WINDOWS_LENGTH = 200;
+    static const int WINDOWS_HIGH = 200;
+    static const int GRID_FIRST_LINE = 5;
+    static const int CELL_LENGTH = 4; // number of characters of one grid cell
+    static const int GRID_LENGTH = 20;
+    static const int GRID_HIGH = 20;
+
+    point GRID_POS = point(0, 0); // windows position of first grid character
+    point INIT_POINT = point(-10,-10); //real coordinates of left_up grid point
+    point LAST_MOVE = point(0,0); // real coordinates of last player move (needed for cursor shifting)
+
 private:
 public:
 
@@ -55,17 +57,15 @@ public:
 
     string get_cells_interior(size_t number_of_cell);
 
-    coordinate_size get_grid_size(const playground &p);
-
     void print_grid(const playground &p); //return GRID_POS
 
     int get_fist_pos_of_centrilized_text(const string &text);
 
     int get_answer_from_centrilized_text(const string &text, size_t line);
 
-    point convert_to_real_coordinate(const point &p, const playground &playground);
+    point convert_to_real_coordinate(const point &grid_p);
 
-    point convert_to_grid_coordinate(const point &p, const playground &playground);
+    bool try_convert_to_grid_coordinate(const point &real_p, point & grid_p);
 
     void fill_grid(const playground &playground);
 
@@ -75,7 +75,7 @@ public:
 
     point get_coordinate_from_user(const playground &playground);
 
-    void add_move(point move, char sign, const playground &p);
+    void add_move(point move, char sign);
 
     bool print_winning_footer(int winner_id);
 
