@@ -28,10 +28,10 @@ bool playground::try_to_encrese_field(const point &last_p) {
     return was_encrease;
 }
 
-char playground::get_sign(const point &p) {
+char playground::get_sign(const point &p) const{
     if (field1.find(p.x) != field1.end()){
-        if (field1[p.x].find(p.y) != field1[p.x].end()){
-            return field1[p.x][p.y];
+        if (field1.at(p.x).find(p.y) != field1.at(p.x).end()){
+            return field1.at(p.x).at(p.y);
         }
     }
     return 0;
@@ -68,6 +68,8 @@ bool playground::is_solved(const point &last_move) {
         return true;
     if(five_in_direction(point(1,1),last_move))
         return true;
+    if(five_in_direction(point(-1,1),last_move))
+        return true;
     return false;
 }
 
@@ -77,4 +79,21 @@ void playground::clear_field() {
     min_y = -INITIAL_SIZE;
     max_x = INITIAL_SIZE;
     max_y - INITIAL_SIZE;
+}
+
+playground::playground(const playground &playg) {
+    field1 = playg.field1;
+    min_x = playg.min_x;
+    min_y = playg.min_y;
+    max_x = playg.max_x;
+    max_y = playg.max_y;
+}
+
+playground & playground::operator=(const playground &playg) {
+    field1 = playg.field1;
+    min_x = playg.min_x;
+    min_y = playg.min_y;
+    max_x = playg.max_x;
+    max_y = playg.max_y;
+    return *this;
 }

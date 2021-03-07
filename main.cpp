@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     console_comunicator c;
     playground p;
     c.print_starting_screen(p);
-    /*bool want_play = true;
+    bool want_play = true;
     while (want_play) {
 
 
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
         want_play = c.print_winning_footer(index % 2 + 1);
         if (want_play)
             p.clear_field();
-    }*/
+    }
 
     return 0;
 }

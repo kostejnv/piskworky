@@ -12,6 +12,17 @@ public:
         x = x1;
         y = y1;
     }
+
+    point(const point & p){
+        x = p.x;
+        y = p.y;
+    }
+
+    point& operator =(const point& p){
+        x = p.x;
+        y = p.y;
+        return *this;
+    }
 };
 
 #endif //PISKWORKY_POINT_H

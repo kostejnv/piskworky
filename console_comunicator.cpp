@@ -7,6 +7,7 @@
 #include "sstream"
 #include "iostream"
 #include "human_player.h"
+#include "computer_player.h"
 #include "memory"
 
 console_comunicator::console_comunicator() {
@@ -139,8 +140,7 @@ void console_comunicator::print_starting_screen(playground &p) {
     if (answer == 0)
         p.players[0] = make_unique<human_player>('X', this);
     else
-        exit(-1);
-    //TODO: add computer player
+        p.players[0] = make_unique<computer_player>('X', this);
 
     print_right("Player number 2 is: ", 5);
     print_centrelized(text, 6);
@@ -148,8 +148,7 @@ void console_comunicator::print_starting_screen(playground &p) {
     if (answer == 0)
         p.players[1] = make_unique<human_player>('O', this);
     else
-        exit(-1);
-    //TODO: add computer player
+        p.players[1] = make_unique<computer_player>('O', this);
 }
 
 point console_comunicator::convert_to_grid_coordinate(const point &p, const playground &playground) {
@@ -198,8 +197,12 @@ point console_comunicator::get_coordinate_from_user(const playground &playground
 
         switch (c) {
             // normal character handling
-            case 10:
-                cell_was_selected = true;
+            case 10: {
+                point selected_cell = convert_to_real_coordinate(actual_pos, playground);
+                if (playground.get_sign(selected_cell) == 0) {
+                    return selected_cell;
+                }
+            }
                 break;
             case 'w':
                 if (convert_to_real_coordinate(point(actual_pos.x, actual_pos.y - 2), playground).y >=
@@ -234,8 +237,6 @@ point console_comunicator::get_coordinate_from_user(const playground &playground
 
         }
         wrefresh(win);
-        if (cell_was_selected)
-            return convert_to_real_coordinate(actual_pos, playground);
     }
 }
 
@@ -249,7 +250,7 @@ bool console_comunicator::print_winning_footer(int winner_id) { //true if player
     stringstream sss;
     sss << "Winner is player number " << winner_id << ". CONGRATULATIONS!";
     print_centrelized(sss.str(), FIRST_LINE_FOOTER);
-    print_right("Do you play revenge?", FIRST_LINE_FOOTER + 1);
+    print_right("Do you want to play revenge?", FIRST_LINE_FOOTER + 1);
     print_centrelized("*YES            *NO", FIRST_LINE_FOOTER + 2);
     return get_answer_from_centrilized_text("*YES            *NO", FIRST_LINE_FOOTER + 2) == 0;
 }
