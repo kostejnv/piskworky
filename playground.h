@@ -41,7 +41,7 @@ public:
 
     char get_sign(const point &p) const;
 
-    bool is_solved(const point &last_move);
+    bool is_solved(const point &last_move); //check if last_move contains to five in line
 
     void clear_field();
 
