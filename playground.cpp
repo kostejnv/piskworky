@@ -4,28 +4,24 @@
 
 #include "playground.h"
 
+field playground::get_field() const{
+    return field1;
+}
 
-bool playground::try_to_encrese_field(const point &last_p) {
-    bool was_encrease = false;
+void playground::check_extremes(const point &last_p) {
 
-    if (max_x < last_p.x) {
+    if (max_x < last_p.x)
         max_x = last_p.x;
-        was_encrease = true;
-    }
 
-    if (min_x > last_p.x) {
+    if (min_x > last_p.x)
         min_x = last_p.x;
-        was_encrease = true;
-    }
-    if (max_y < last_p.y) {
+
+    if (max_y < last_p.y)
         max_y = last_p.y;
-        was_encrease = true;
-    }
-    if (min_y > last_p.y) {
+
+    if (min_y > last_p.y)
         min_y = last_p.y;
-        was_encrease = true;
-    }
-    return was_encrease;
+
 }
 
 char playground::get_sign(const point &p) const{
@@ -75,10 +71,10 @@ bool playground::is_solved(const point &last_move) {
 
 void playground::clear_field() {
     field1.clear();
-    min_x = -INITIAL_SIZE;
-    min_y = -INITIAL_SIZE;
-    max_x = INITIAL_SIZE;
-    max_y - INITIAL_SIZE;
+    min_x = 0;
+    min_y = 0;
+    max_x = 0;
+    max_y = 0;
 }
 
 playground::playground(const playground &playg) {

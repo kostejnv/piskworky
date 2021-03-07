@@ -73,7 +73,7 @@ long int computer_player::static_evaluator(const playground &playg) {
 
     long int evaluation = 0;
     if (rival_n_in_row_count[5] != 0) {
-        evaluation = LONG_MIN;
+        evaluation = LONG_MIN + 1;
         return evaluation;
     }
 
@@ -88,7 +88,7 @@ long int computer_player::static_evaluator(const playground &playg) {
 
 }
 
-vector<point> computer_player::get_posibble_moves(const field &field1) { //Dobre
+vector<point> computer_player::get_posibble_moves(const field &field1) {
     map<int, map<int, bool>> mask;
     for (const auto&[x, line] : field1) {
         for (const auto&[y, sign] : line) {
@@ -127,7 +127,7 @@ point computer_player::alpha_beta_prunning_init(const playground &playg) {
     long int beta = LONG_MAX;
     point best_move(0, 0);
 
-    auto neigboors = get_posibble_moves(playg.field1);
+    auto neigboors = get_posibble_moves(playg.get_field());
 
     if (neigboors.size() == 1)
         return best_move;
@@ -159,12 +159,12 @@ long int computer_player::alpha_beta_prunning(const playground &playg, int depth
         return static_evaluator(playg);
     }
 
-    auto neigboors = get_posibble_moves(playg.field1);
+    auto neigboors = get_posibble_moves(playg.get_field());
 
     long int value;
     if (this_player) {
         value = LONG_MIN;
-        for (auto &&move : neigboors) { //TODO: zplostit rekurzi
+        for (auto &&move : neigboors) {
             playground playg_with_next_move(playg);
             playg_with_next_move.add_to_field(this->sign, move);
             value = max(value, alpha_beta_prunning(playg_with_next_move, depth - 1, alpha, beta, false));

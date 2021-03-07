@@ -12,7 +12,7 @@
 
 console_comunicator::console_comunicator() {
     initscr();
-    win = newwin(WINDOWS_X_SIZE, WINDOWS_Y_SIZE, 0, 0);
+    win = newwin(WINDOWS_LENGTH, WINDOWS_HIGH, 0, 0);
     noecho();
 }
 
@@ -72,29 +72,21 @@ string console_comunicator::get_cells_interior(size_t number_of_cell) {
     return sss.str();
 }
 
-coordinate_size console_comunicator::get_grid_size(const playground &p) {
-    int x_size, y_size;
-    x_size = 2 * CORIDOR_EDGE_LENGTH + p.max_x - p.min_x + 1;
-    y_size = 2 * CORIDOR_EDGE_LENGTH + p.max_y - p.min_y + 1;
-    return coordinate_size(x_size, y_size);
+void console_comunicator::print_grid(const playground &p) {
+    string line = get_string_line(GRID_LENGTH);
+    string interior = get_cells_interior(GRID_HIGH);
+    wmove(win, GRID_FIRST_LINE, 0);
+    for (int i = 0; i < GRID_HIGH; ++i) {
+        print_centrelized(line, GRID_FIRST_LINE + 2 * i);
+        print_centrelized(interior, GRID_FIRST_LINE + 2 * i + 1);
+    }
+    print_centrelized(line, GRID_FIRST_LINE + 2 * GRID_HIGH);
+    GRID_POS = point(get_fist_pos_of_centrilized_text(line), GRID_FIRST_LINE);
 }
 
-void console_comunicator::print_grid(const playground &p) {
-    coordinate_size size = get_grid_size(p);
-    string line = get_string_line(size.x);
-    string interior = get_cells_interior(size.x);
-    wmove(win, FIRST_LINE_GRID, 0);
-    for (int i = 0; i < size.y; ++i) {
-        print_centrelized(line, FIRST_LINE_GRID + 2 * i);
-        print_centrelized(interior, FIRST_LINE_GRID + 2 * i + 1);
-    }
-    print_centrelized(line, FIRST_LINE_GRID + 2 * size.y);
-    GRID_POS = point(get_fist_pos_of_centrilized_text(line), FIRST_LINE_GRID);
-    FIRST_LINE_FOOTER = GRID_POS.y + 2 * size.y + 2;
-}
 
 int console_comunicator::get_fist_pos_of_centrilized_text(const string &text) {
-    return WINDOWS_Y_SIZE / 2 - text.size() / 2;
+    return WINDOWS_HIGH / 2 - text.size() / 2;
 }
 
 int console_comunicator::get_answer_from_centrilized_text(const string &text, size_t line) {
@@ -151,25 +143,33 @@ void console_comunicator::print_starting_screen(playground &p) {
         p.players[1] = make_unique<computer_player>('O', this);
 }
 
-point console_comunicator::convert_to_grid_coordinate(const point &p, const playground &playground) {
-    int x_grid = GRID_POS.x + 2 + CELL_LENGTH * (p.x - playground.min_x + CORIDOR_EDGE_LENGTH);
-    int y_grid = GRID_POS.y + 1 + 2 * (p.y - playground.min_y + CORIDOR_EDGE_LENGTH);
-    return point(x_grid, y_grid);
+bool console_comunicator::try_convert_to_grid_coordinate(const point &real_p, point &grid_p) {
+    if (real_p.x < INIT_POINT.x ||
+        real_p.x >= INIT_POINT.x + GRID_LENGTH ||
+        real_p.y < INIT_POINT.y ||
+        real_p.y >= INIT_POINT.y + GRID_HIGH)
+        return false;
+    int x_grid = GRID_POS.x + 2 + CELL_LENGTH * (real_p.x - INIT_POINT.x);
+    int y_grid = GRID_POS.y + 1 + 2 * (real_p.y - INIT_POINT.y);
+    grid_p = point(x_grid, y_grid);
+    return true;
 
 }
 
-point console_comunicator::convert_to_real_coordinate(const point &p, const playground &playground) {
-    int x_real = playground.min_x - CORIDOR_EDGE_LENGTH + (p.x - GRID_POS.x - 2) / CELL_LENGTH;
-    int y_real = playground.min_y - CORIDOR_EDGE_LENGTH + (p.y - GRID_POS.y - 1) / 2;
+point console_comunicator::convert_to_real_coordinate(const point &grid_p) {
+    int x_real = INIT_POINT.x + (grid_p.x - GRID_POS.x - 2) / CELL_LENGTH;
+    int y_real = INIT_POINT.y + (grid_p.y - GRID_POS.y - 1) / 2;
     return point(x_real, y_real);
 }
 
 void console_comunicator::fill_grid(const playground &playground) {
-    for (const auto&[x, line] : playground.field1) {
+    for (const auto&[x, line] : playground.get_field()) {
         for (const auto&[y, sign] : line) {
-            point grid_point = convert_to_grid_coordinate(point(x, y), playground);
-            wmove(win, grid_point.y, grid_point.x);
-            waddch(win, sign);
+            point grid_point = point(0, 0);
+            if (try_convert_to_grid_coordinate(point(x, y), grid_point)) {
+                wmove(win, grid_point.y, grid_point.x);
+                waddch(win, sign);
+            }
         }
     }
     wrefresh(win);
@@ -188,7 +188,12 @@ void console_comunicator::print_playing_screen(const playground &playground) {
 
 point console_comunicator::get_coordinate_from_user(const playground &playground) {
 
-    point actual_pos = convert_to_grid_coordinate(point(0, 0), playground);
+    point actual_pos = point(0,0);
+    try_convert_to_grid_coordinate(LAST_MOVE, actual_pos);
+    wmove(win,actual_pos.y, actual_pos.x);
+    wrefresh(win);
+
+
     bool cell_was_selected = false;
 
     while (true) {
@@ -198,39 +203,52 @@ point console_comunicator::get_coordinate_from_user(const playground &playground
         switch (c) {
             // normal character handling
             case 10: {
-                point selected_cell = convert_to_real_coordinate(actual_pos, playground);
+                point selected_cell = convert_to_real_coordinate(actual_pos);
                 if (playground.get_sign(selected_cell) == 0) {
                     return selected_cell;
                 }
             }
                 break;
             case 'w':
-                if (convert_to_real_coordinate(point(actual_pos.x, actual_pos.y - 2), playground).y >=
-                    playground.min_y - CORIDOR_EDGE_LENGTH) {
+                if (convert_to_real_coordinate(point(actual_pos.x, actual_pos.y - 2)).y >=
+                    INIT_POINT.y) {
                     actual_pos.y -= 2;
-                    wmove(win, actual_pos.y, actual_pos.x);
+                } else {
+                    INIT_POINT.y -= 1;
+                    print_field(playground);
                 }
+                wmove(win, actual_pos.y, actual_pos.x);
                 break;
             case 's':
-                if (convert_to_real_coordinate(point(actual_pos.x, actual_pos.y + 2), playground).y <=
-                    playground.max_y + CORIDOR_EDGE_LENGTH) {
+                if (convert_to_real_coordinate(point(actual_pos.x, actual_pos.y + 2)).y <=
+                    INIT_POINT.y + GRID_HIGH - 1) {
                     actual_pos.y += 2;
-                    wmove(win, actual_pos.y, actual_pos.x);
+                } else {
+                    INIT_POINT.y += 1;
+                    print_field(playground);
+
                 }
+                wmove(win, actual_pos.y, actual_pos.x);
                 break;
             case 'd':
-                if (convert_to_real_coordinate(point(actual_pos.x + CELL_LENGTH, actual_pos.y), playground).x <=
-                    playground.max_x + CORIDOR_EDGE_LENGTH) {
+                if (convert_to_real_coordinate(point(actual_pos.x + CELL_LENGTH, actual_pos.y)).x <=
+                    INIT_POINT.x + GRID_LENGTH - 1) {
                     actual_pos.x += CELL_LENGTH;
-                    wmove(win, actual_pos.y, actual_pos.x);
+                } else {
+                    INIT_POINT.x += 1;
+                    print_field(playground);
                 }
+                wmove(win, actual_pos.y, actual_pos.x);
                 break;
             case 'a':
-                if (convert_to_real_coordinate(point(actual_pos.x - CELL_LENGTH, actual_pos.y), playground).x >=
-                    playground.min_x - CORIDOR_EDGE_LENGTH) {
+                if (convert_to_real_coordinate(point(actual_pos.x - CELL_LENGTH, actual_pos.y)).x >=
+                    INIT_POINT.x) {
                     actual_pos.x -= CELL_LENGTH;
-                    wmove(win, actual_pos.y, actual_pos.x);
+                } else {
+                    INIT_POINT.x -= 1;
+                    print_field(playground);
                 }
+                wmove(win, actual_pos.y, actual_pos.x);
                 break;
             default:
                 break;
@@ -240,17 +258,21 @@ point console_comunicator::get_coordinate_from_user(const playground &playground
     }
 }
 
-void console_comunicator::add_move(point move, char sign, const playground &p) {
-    point grid_point = convert_to_grid_coordinate(move, p);
-    wmove(win, grid_point.y, grid_point.x);
-    waddch(win, sign);
+void console_comunicator::add_move(point move, char sign) {
+    LAST_MOVE = move;
+    point grid_point = point(0, 0);
+    if (try_convert_to_grid_coordinate(move, grid_point)) {
+        wmove(win, grid_point.y, grid_point.x);
+        waddch(win, sign);
+    }
 }
 
 bool console_comunicator::print_winning_footer(int winner_id) { //true if player want next game
+    int first_line_footer = GRID_POS.y + 2 * GRID_HIGH + 2;
     stringstream sss;
     sss << "Winner is player number " << winner_id << ". CONGRATULATIONS!";
-    print_centrelized(sss.str(), FIRST_LINE_FOOTER);
-    print_right("Do you want to play revenge?", FIRST_LINE_FOOTER + 1);
-    print_centrelized("*YES            *NO", FIRST_LINE_FOOTER + 2);
-    return get_answer_from_centrilized_text("*YES            *NO", FIRST_LINE_FOOTER + 2) == 0;
+    print_centrelized(sss.str(), first_line_footer);
+    print_right("Do you want to play revenge?", first_line_footer + 1);
+    print_centrelized("*YES            *NO", first_line_footer + 2);
+    return get_answer_from_centrilized_text("*YES            *NO", first_line_footer + 2) == 0;
 }
