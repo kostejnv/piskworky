@@ -3,12 +3,12 @@
 #include <sstream>
 #include "playground.h"
 #include "point.h"
-#include "console_comunicator.h"
+#include "user_interface.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    console_comunicator c;
+    user_interface c;
     playground p;
 
     c.print_starting_screen(p);

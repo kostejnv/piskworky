@@ -6,7 +6,7 @@
 #define PISKWORKY_PLAYGROUND_H
 
 #include "map"
-#include "console_comunicator.h"
+#include "user_interface.h"
 #include "player.h"
 #include "memory"
 #include "point.h"
@@ -18,7 +18,7 @@ using field = map<int, map<int, cell>>; //first x then y
 
 class player;
 
-class console_comunicator;
+class user_interface;
 
 class playground {
 

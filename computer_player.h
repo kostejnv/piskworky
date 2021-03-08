@@ -35,7 +35,7 @@ private:
 
     long int static_evaluator(const playground &playg);
 
-    vector<point> get_possible_moves(const field &field1); //get every cell around marked cells
+    static vector<point> get_possible_moves(const field &field1); //get every cell around marked cells
 
     tuple<int, int> signs_count_in_5_row(const playground &playg, const point &initial_point,
                                          const point &direction);

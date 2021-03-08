@@ -6,19 +6,19 @@
 #define PISKWORKY_HUMAN_PLAYER_H
 
 #include "player.h"
-#include "console_comunicator.h"
+#include "user_interface.h"
 #include "point.h"
 #include "playground.h"
 
 
 class human_player :   public player {
 
-    console_comunicator *c;
+    user_interface *c;
 
 public:
     ~human_player() override = default;
 
-    human_player(char sign, console_comunicator *c) { this->sign = sign; this->c = c;}
+    human_player(char sign, user_interface *c) { this->sign = sign; this->c = c;}
 
     point play(const playground &playg) override;
 

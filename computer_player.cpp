@@ -172,7 +172,7 @@ vector<point> computer_player::get_possible_moves(const field &field1) {
     for (const auto&[x, line] : mask) {
         for (const auto&[y, unsigned_cell] : line) {
             if (unsigned_cell)
-                neighbours.push_back(point(x, y));
+                neighbours.emplace_back(point(x, y));
         }
     }
 
