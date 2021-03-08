@@ -77,6 +77,7 @@ point user_interface::get_coordinate_from_user(const playground &playground) {
                     return selected_cell;
             }
                 break;
+
             case 'w':
                 if (convert_to_real_coordinate(point(actual_pos.x, actual_pos.y - 2)).y >=
                     INIT_POINT.y) {
@@ -87,6 +88,7 @@ point user_interface::get_coordinate_from_user(const playground &playground) {
                 }
                 wmove(win, actual_pos.y, actual_pos.x);
                 break;
+
             case 's':
                 if (convert_to_real_coordinate(point(actual_pos.x, actual_pos.y + 2)).y <=
                     INIT_POINT.y + GRID_HIGH - 1) {
@@ -98,6 +100,7 @@ point user_interface::get_coordinate_from_user(const playground &playground) {
                 }
                 wmove(win, actual_pos.y, actual_pos.x);
                 break;
+
             case 'd':
                 if (convert_to_real_coordinate(point(actual_pos.x + CELL_LENGTH, actual_pos.y)).x <=
                     INIT_POINT.x + GRID_LENGTH - 1) {
@@ -108,6 +111,7 @@ point user_interface::get_coordinate_from_user(const playground &playground) {
                 }
                 wmove(win, actual_pos.y, actual_pos.x);
                 break;
+
             case 'a':
                 if (convert_to_real_coordinate(point(actual_pos.x - CELL_LENGTH, actual_pos.y)).x >=
                     INIT_POINT.x) {
@@ -118,6 +122,7 @@ point user_interface::get_coordinate_from_user(const playground &playground) {
                 }
                 wmove(win, actual_pos.y, actual_pos.x);
                 break;
+
             default:
                 break;
 
@@ -127,21 +132,24 @@ point user_interface::get_coordinate_from_user(const playground &playground) {
 }
 
 void user_interface::add_move(const point &move, char sign) {
-    LAST_MOVE = move;
     point grid_point(0, 0);
     if (try_convert_to_grid_coordinate(move, grid_point)) {
         wmove(win, grid_point.y, grid_point.x);
         waddch(win, sign);
     }
+
+    LAST_MOVE = move;
 }
 
-bool user_interface::print_winning_footer(int winner_id) { //true if player want next game
+bool user_interface::print_winning_footer(int winner_id) {
     int first_line_footer = GRID_POS.y + 2 * GRID_HIGH + 2;
+
     stringstream sss;
     sss << "Winner is player number " << winner_id << ". CONGRATULATIONS!";
     print_centralized(sss.str(), first_line_footer);
     print_right("Do you want to play revenge?", first_line_footer + 1);
     print_centralized("*YES            *NO", first_line_footer + 2);
+
     return get_answer_from_centralized_text("*YES            *NO", first_line_footer + 2) == 0;
 }
 //_____________________________________________________________________________________________
@@ -179,19 +187,6 @@ void user_interface::print_header(size_t turn) {
     print_player_turn(turn);
 }
 
-string user_interface::get_cell_line(size_t number_of_cell) {
-    return string(number_of_cell * CELL_LENGTH + 1, '-');
-}
-
-string user_interface::get_cells_interior(size_t number_of_cell) {
-    stringstream sss;
-    for (int i = 0; i < number_of_cell; ++i) {
-        sss << "|   ";
-    }
-    sss << "|";
-    return sss.str();
-}
-
 int user_interface::get_answer_from_centralized_text(const string &text, size_t line) {
 
     size_t first_choice_x_position = get_first_pos_of_centralized_text(text) + text.find_first_of('*');
@@ -226,6 +221,31 @@ int user_interface::get_answer_from_centralized_text(const string &text, size_t 
             break;
     }
     return choice;
+}
+
+string user_interface::get_cell_line(size_t number_of_cell) {
+    return string(number_of_cell * CELL_LENGTH + 1, '-');
+}
+
+string user_interface::get_cells_interior(size_t number_of_cell) {
+    stringstream sss;
+    for (int i = 0; i < number_of_cell; ++i) {
+        sss << "|   ";
+    }
+    sss << "|";
+    return sss.str();
+}
+
+void user_interface::print_grid(const playground &p) {
+
+    string line = get_cell_line(GRID_LENGTH);
+    string interior = get_cells_interior(GRID_HIGH);
+
+    for (int i = 0; i < GRID_HIGH; ++i) {
+        print_centralized(line, GRID_POS.y + 2 * i);
+        print_centralized(interior, GRID_POS.y + 2 * i + 1);
+    }
+    print_centralized(line, GRID_POS.y + 2 * GRID_HIGH);
 }
 
 point user_interface::convert_to_real_coordinate(const point &grid_p) const {
