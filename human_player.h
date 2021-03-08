@@ -12,12 +12,16 @@
 
 
 class human_player :   public player {
-    console_comunicator * c;
+
+    console_comunicator *c;
+
 public:
+    ~human_player() override = default;
+
     human_player(char sign, console_comunicator *c) { this->sign = sign; this->c = c;}
-    virtual point play(const playground &playg) override;
-    virtual std::string get_type() override;
-    virtual ~human_player() {};
+
+    point play(const playground &playg) override;
+
 };
 
 

@@ -62,34 +62,40 @@ void playground::check_extremes(const point &last_p) {
 }
 
 bool playground::five_in_direction(const point &direction, const point &last_move) const {
-    char given_sign = get_sign(last_move);
-    int sign_in_row = 1;
+    char last_move_sign = get_sign(last_move);
+    int signs_in_row = 1;
     for (int i = 1; i <= 5; ++i) {
         point next_cell(last_move.x + i * direction.x, last_move.y + i * direction.y);
-        if (get_sign(next_cell) == given_sign)
-            sign_in_row++;
+
+        if (get_sign(next_cell) == last_move_sign)
+            signs_in_row++;
         else
             break;
     }
     for (int i = 1; i <= 5; ++i) { //opposite direction
         point next_cell(last_move.x - i * direction.x, last_move.y - i * direction.y);
-        if (get_sign(next_cell) == given_sign)
-            sign_in_row++;
+
+        if (get_sign(next_cell) == last_move_sign)
+            signs_in_row++;
         else
             break;
     }
-    return sign_in_row >= 5;
+    return signs_in_row >= 5;
 }
 
 bool playground::is_solved(const point &last_move) {
     if (five_in_direction(point(1, 0), last_move))
         return true;
+
     if (five_in_direction(point(0, 1), last_move))
         return true;
+
     if (five_in_direction(point(1, 1), last_move))
         return true;
+
     if (five_in_direction(point(-1, 1), last_move))
         return true;
+
     return false;
 }
 
