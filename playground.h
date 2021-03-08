@@ -17,6 +17,7 @@ using cell = char;
 using field = map<int, map<int, cell>>; //first x then y
 
 class player;
+
 class console_comunicator;
 
 class playground {
@@ -29,24 +30,24 @@ public:
 
     playground() {}
 
-    playground(const playground & playg);
+    playground(const playground &playg);
 
-    playground& operator=(const playground & playg);
-
-    void check_extremes(const point &last_p); //check min,max x,y
-
-    void add_to_field(char sign, const point &coordinate);
-
-    field get_field() const;
-
-    char get_sign(const point &p) const;
-
-    bool is_solved(const point &last_move); //check if last_move contains to five in line
+    playground &operator=(const playground &playg);
 
     void clear_field();
 
+    field get_field() const;
+
+    void add_to_field(char sign, const point &coordinate);
+
+    char get_sign(const point &p) const;
+
+    void check_extremes(const point &last_p); //check min,max x,y
+
+    bool is_solved(const point &last_move); //check if last_move contains to five in line
+
 private:
-    bool five_in_direction(point direction, const point &last_move);
+    bool five_in_direction(const point &direction, const point &last_move) const;
 };
 
 
