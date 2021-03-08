@@ -19,7 +19,7 @@ point computer_player::get_best_move_algorithm(const playground &playg) {
     long int beta = LONG_MAX;
     point best_move(0, 0);
 
-    auto neighbors = get_possible_moves(playg.get_field());
+    auto neighbors = get_possible_moves(playg.field1);
 
     if (neighbors.size() == 1)
         return best_move;
@@ -49,7 +49,7 @@ long int computer_player::alpha_beta_pruning(const playground &playg, int depth,
         return static_evaluator(playg);
     }
 
-    auto neighbours = get_possible_moves(playg.get_field());
+    auto neighbours = get_possible_moves(playg.field1);
 
     long int value;
     if (this_player) {

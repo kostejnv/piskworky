@@ -262,7 +262,7 @@ bool user_interface::try_convert_to_grid_coordinate(const point &real_p, point &
         real_p.y >= INIT_POINT.y + GRID_HIGH) //check if point in not out of grid
         return false;
 
-    int x_grid = GRID_POS.x + 2 + CELL_LENGTH * (real_p.x - INIT_POINT.x);
+    int x_grid = GRID_POS.x + 3 + CELL_LENGTH * (real_p.x - INIT_POINT.x);
     int y_grid = GRID_POS.y + 1 + 2 * (real_p.y - INIT_POINT.y);
     grid_p = point(x_grid, y_grid);
     return true;
@@ -270,7 +270,7 @@ bool user_interface::try_convert_to_grid_coordinate(const point &real_p, point &
 
 void user_interface::fill_grid(const playground &playground) {
 
-    for (const auto&[x, line] : playground.get_field()) {
+    for (const auto&[x, line] : playground.field1) {
         for (const auto&[y, sign] : line) {
             point grid_point(0, 0);
             if (try_convert_to_grid_coordinate(point(x, y), grid_point)) {

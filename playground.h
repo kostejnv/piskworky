@@ -21,9 +21,9 @@ class player;
 class user_interface;
 
 class playground {
-
-    field field1;
 public:
+    field field1;
+
     unique_ptr<player> players[2];
 
     int min_x = 0, min_y = 0, max_x = 0, max_y = 0; //coordinates of extremal cells
@@ -35,8 +35,6 @@ public:
     playground &operator=(const playground &playg);
 
     void clear_field();
-
-    field get_field() const;
 
     void add_to_field(char sign, const point &coordinate);
 

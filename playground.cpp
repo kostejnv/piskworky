@@ -29,10 +29,6 @@ void playground::clear_field() {
     max_y = 0;
 }
 
-field playground::get_field() const {
-    return field1;
-}
-
 char playground::get_sign(const point &p) const {
     if (field1.find(p.x) != field1.end()) {
         if (field1.at(p.x).find(p.y) != field1.at(p.x).end()) {
