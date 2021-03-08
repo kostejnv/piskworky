@@ -15,32 +15,34 @@ using namespace std;
 class playground;
 
 class computer_player : public player {
-    console_comunicator * c;
-public:
-
-
-    computer_player(char sign, console_comunicator *c) { this->sign = sign; this->c = c;}
-
-    virtual point play(const playground &playg) override;
-
-    virtual std::string get_type() override;
-
-    virtual ~computer_player() {}
 
 private:
-    char get_rival_sign();
     const static int DEPTH = 2;
-    tuple<int, int> get_numbers_of_played_cells_in_five_series(const playground &playg, const point &intial_point,
-                                                               const point &direction);
-    //first - count of my sign, second - count of rival
+
+public:
+
+    explicit computer_player(char sign) { this->sign = sign; }
+
+    ~computer_player() override = default;
+
+    point play(const playground &playg) override;
+
+private:
+
+    point get_best_move_algorithm(const playground &playg); //initial phase of alpha-beta pruning
+
+    long int alpha_beta_pruning(const playground &playg, int depth, long int alpha, long int beta, bool this_player);
 
     long int static_evaluator(const playground &playg);
 
-    vector<point> get_posibble_moves(const field &field1);
+    vector<point> get_possible_moves(const field &field1); //get every cell around marked cells
 
-    point alpha_beta_prunning_init(const playground &playg);
-    long int alpha_beta_prunning(const playground &playg, int depth, long int alpha, long int beta, bool this_player);
+    tuple<int, int> signs_count_in_5_row(const playground &playg, const point &initial_point,
+                                         const point &direction);
+    //in 5 cells from initial point (left-up) in give direction
+    //return count of this player sign (first) and rival player sign (second)
 
+    char get_rival_sign();
 };
 
 
