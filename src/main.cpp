@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
         c.print_playing_screen(p);
         int index = 0;
         while (true) {
-            c.print_player_turn(index % 2 + 1);
+            c.print_who_play_next(index % 2 + 1);
 
             point played_move = p.players[index % 2]->play(p);
 

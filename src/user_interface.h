@@ -42,7 +42,7 @@ public:
 
     void print_playing_screen(const playground &playground); //print header and field
 
-    void print_player_turn(size_t turn); //show which player should play (turn according to player -> 1 or 2)
+    void print_who_play_next(size_t player_number); // player_number according to player -> 1 or 2
 
     point get_coordinate_from_user(const playground &playground);   // get real coordinate that user selected
     // can shift with fields

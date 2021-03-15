@@ -45,12 +45,12 @@ void user_interface::print_starting_screen(playground &p) {
         p.players[1] = make_unique<computer_player>('O');
 }
 
-void user_interface::print_player_turn(size_t turn) {
-    if (turn == 1)
-        print_centralized("                  player 1 (X): It is your turn!           player 2 (O)                  ",
+void user_interface::print_who_play_next(size_t player_number) {
+    if (player_number == 1)
+        print_centralized("                  player 1 (X): It is your player_number!           player 2 (O)                  ",
                           3);
     else
-        print_centralized("                  player 1 (X):                            player 2 (O): It is your turn!",
+        print_centralized("                  player 1 (X):                            player 2 (O): It is your player_number!",
                           3);
 }
 
@@ -184,7 +184,7 @@ void user_interface::print_title() {
 
 void user_interface::print_header(size_t turn) {
     print_title();
-    print_player_turn(turn);
+    print_who_play_next(turn);
 }
 
 int user_interface::get_answer_from_centralized_text(const string &text, size_t line) {
