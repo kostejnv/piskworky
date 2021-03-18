@@ -3,6 +3,7 @@ project(piskworky)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(CURSES_NEED_NCURSES TRUE)
 find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
 

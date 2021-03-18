@@ -7,14 +7,14 @@ Piskoworky is a console version of the game **Gomoku** (sometimes called *Five I
 For this game is required UNIX-like systems with cmake (version 3.16.3.). You can build (and istall) it with commands bellow:
 ```
 cd <game-directory path>
-mkdir exe
-cd exe
+mkdir bin
+cd bin
 cmake ../
 make
 ```
 Then you can run the game with command:
 ``` 
-<game-directory path>/piskworky 
+<game-directory path>/bin/piskworky 
 ```
 
 ## TUTORIALS
